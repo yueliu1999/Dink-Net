@@ -5,7 +5,10 @@
 
 <h2><a href="https://arxiv.org/pdf/2305.18405.pdf">Dink-Net: Neural Clustering on Large Graphs</a></h2>
 
-[Yue Liu](https://yueliu1999.github.io/), [Ke Liang](https://liangke23.github.io/), [Jun Xia](), [Sihang Zhou](https://scholar.google.com/citations?user=p9Se8kYAAAAJ&hl=zh-CN&oi=ao/), [Xihong Yang](https://xihongyang1999.github.io/), [Xinwang Liu](https://xinwangliu.github.io/), [Stan Z. Li](https://scholar.google.com/citations?user=Y-nyLGIAAAAJ&hl=zh-CN&oi=ao)
+[Yue Liu](https://yueliu1999.github.io/)<sup>1,2</sup>, [Ke Liang](https://liangke23.github.io/)<sup>1</sup>,  [Jun Xia](https://junxia97.github.io/)<sup>2</sup>, [Sihang Zhou](https://scholar.google.com/citations?user=p9Se8kYAAAAJ&hl=zh-CN&oi=ao/)<sup>1</sup>, [Xihong Yang](https://xihongyang1999.github.io/)<sup>1</sup>, [Xinwang Liu](https://xinwangliu.github.io/)<sup>1</sup>, [Stan Z. Li](https://scholar.google.com/citations?user=Y-nyLGIAAAAJ&hl=zh-CN&oi=ao)<sup>2</sup>
+
+<sup>1</sup>[National University of Defense Technology](https://english.nudt.edu.cn/), <sup>2</sup>[Westlake University](https://westlake.edu.cn/)
+
 
 </div>
 
@@ -19,6 +22,11 @@
     <a href="https://icml.cc/Conferences/2023" alt="Conference">
         <img src="https://img.shields.io/badge/ICML'23-brightgreen" /></a>
 <p/>
+
+
+
+Deep graph clustering, which aims to group the nodes of a graph into disjoint clusters with deep neural networks, has achieved promising progress in recent years. However, the existing methods fail to scale to the large graph with million nodes. To solve this problem, a scalable deep graph clustering method (\textit{Dink-Net}) is proposed with the idea of \underline{di}lation and shri\underline{nk}. Firstly, by discriminating nodes, whether being corrupted by augmentations, representations are learned in a self-supervised manner. Meanwhile, the cluster centers are initialized as learnable neural parameters. Subsequently, the clustering distribution is optimized by minimizing the proposed cluster dilation loss and cluster shrink loss in an adversarial manner. By these settings, we unify the two-step clustering, i.e., representation learning and clustering optimization, into an end-to-end framework, guiding the network to learn clustering-friendly features. Besides, \textit{Dink-Net} scales well to large graphs since the designed loss functions adopt the mini-batch data to optimize the clustering distribution even without performance drops. Both experimental results and theoretical analyses demonstrate the superiority of our method.
+
 
 
 [![stars](https://img.shields.io/github/stars/yueliu1999/Dink-Net?color=yellow)](https://github.com/yueliu1999/Dink-Net/stars)
