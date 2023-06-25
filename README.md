@@ -31,9 +31,22 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 <details>
   <summary>Table of Contents</summary>
   <ol>
+    <li><a href="#Quick Start">Quick Start</a></li>
+    <li><a href="#acknowledgement">Acknowledgement</a></li>
     <li><a href="#citation">Citation</a></li>
   </ol>
 </details>
+
+## Quick Start
+### Requirement
+
+
+## Acknowledgement
+Our code are partly based on the following GitHub repository. Thanks for their awesome works. 
+- [Awesome Deep Graph Clustering](https://github.com/yueliu1999/Awesome-Deep-Graph-Clustering): a collection of deep graph clustering (papers, codes, and datasets). 
+- [Graph-Group-Discrimination](https://github.com/zyzisastudyreallyhardguy/Graph-Group-Discrimination): the official implement of Graph Group Discrimination (GGD) model.
+- [HSAN](https://github.com/yueliu1999/HSAN): the official implement of Hard Sample Aware Network (HSAN) model.
+- [DCRN](https://github.com/yueliu1999/DCRN): the official implement of Dual Correlation Reduction Network (DCRN) model.
 
 
 
