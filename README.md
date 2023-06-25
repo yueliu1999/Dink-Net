@@ -28,6 +28,12 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 [![ visitors](https://visitor-badge.glitch.me/badge?page_id=yueliu1999.Dink-Net)](https://github.com/yueliu1999/Dink-Net)
 
 
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li><a href="#citation">Citation</a></li>
+  </ol>
+</details>
 
 
 
@@ -45,3 +51,5 @@ If you find this repository helpful, please cite our papers.
   organization={PMLR}
 }
 ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
