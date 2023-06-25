@@ -46,7 +46,7 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 ### Requirements
 ### Datasets
 
-| Dataset         | Type            |   # Nodes   |    # Edges    | # Feat. Dim. | # Classes |
+| Dataset         | Type            |   # Nodes   |    # Edges    | # Feature Dimensions | # Classes |
 | --------------- | --------------- | :---------: | :-----------: | :----------: | :-------: |
 | Cora            | Attribute Graph |    2,708    |     5,278     |    1,433     |     7     |
 | CiteSeer        | Attribute Graph |    3,327    |     4,614     |    3,703     |     6     |
@@ -62,7 +62,16 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 
 ### Configuration
 ### Quick Start
+
+
+
 ### Results
+
+<img src="./assets/main_results.png" alt="main_results" style="zoom:61%;" />
+
+
+
+
 
 
 ## Acknowledgements
@@ -77,7 +86,7 @@ Our code are partly based on the following GitHub repository. Thanks for their a
 
 ## Citations
 
-If you find this repository helpful, please cite our papers.
+If you find this repository helpful, please cite our paper.
 
 ```
 @inproceedings{Dink-Net,
