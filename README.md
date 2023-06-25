@@ -27,15 +27,15 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 [![ issues](https://img.shields.io/github/issues-raw/yueliu1999/Dink-Net?color=%23FF9600)](https://github.com/yueliu1999/Dink-Net/issues)
 [![ visitors](https://visitor-badge.glitch.me/badge?page_id=yueliu1999.Dink-Net)](https://github.com/yueliu1999/Dink-Net)
 
-
 <details>
   <summary>Table of Contents</summary>
   <ol>
-    <li><a href="#Quick Start">Quick Start</a></li>
+    <li><a href="#Quick%20Start">Quick Start</a></li>
     <li><a href="#acknowledgement">Acknowledgement</a></li>
     <li><a href="#citation">Citation</a></li>
-  </ol>
+  </ol>：
 </details>
+
 
 ## Quick Start
 ### Requirement
