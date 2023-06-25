@@ -70,13 +70,19 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 <img src="./assets/main_results.png" alt="main_results" style="zoom:61%;" />
 
 <p style="text-align:justify; text-justify:inter-ideograph;">
-Table1: Clustering performance (%) of our method and fourteen state-of-the-art baselines. The bold and underlined values are the best and the runner-up results. “OOM” indicates that the method raises the out-of-memory failure. “-” denotes that the methods do not converge.
+Table1. Clustering performance (%) of our method and fourteen state-of-the-art baselines. The bold and underlined values are the best and the runner-up results. “OOM” indicates that the method raises the out-of-memory failure. “-” denotes that the methods do not converge.
+</p>
+
+![main_results_vis](./assets/main_results_vis.png)
+
+<p style="text-align:justify; text-justify:inter-ideograph;">
+    Figure 1. <i>t</i>-SNE visualization of seven methods on the Cora dataset.
 </p>
 
 
 
-
 ## Acknowledgements
+
 Our code are partly based on the following GitHub repository. Thanks for their awesome works. 
 - [Awesome Deep Graph Clustering](https://github.com/yueliu1999/Awesome-Deep-Graph-Clustering): a collection of deep graph clustering (papers, codes, and datasets). 
 - [Graph-Group-Discrimination](https://github.com/zyzisastudyreallyhardguy/Graph-Group-Discrimination): the official implement of Graph Group Discrimination (GGD) model.
