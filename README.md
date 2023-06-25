@@ -75,7 +75,7 @@ Table1. Clustering performance (%) of our method and fourteen state-of-the-art b
 
 ![main_results_vis](./assets/main_results_vis.png)
 
-<p style="text-align:justify; text-justify:inter-ideograph;">
+<p align="center">
     Figure 1. <i>t</i>-SNE visualization of seven methods on the Cora dataset.
 </p>
 
