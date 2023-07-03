@@ -61,16 +61,6 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 
 ### Configuration
 
-| Dataset         |   *T*  |   *β*   |   *T’*   |   *β‘*   |    *α*    | *B* | *d* |
-| :-------------: | :-------------: | :---------: | :-----------: | :----------: | :-------: | :-------: | :-------: |
-| Cora            | 200 |    1e-3    |    200    |    1e-2    |     1e-10     |    -    |     512     |
-| CiteSeer        | 100 |    5e-4    |    200    |    1e-2    |     1e-10     |    -     |     1536     |
-| Amazon-Photo    | 2000 |    5e-4    |    100    |    1e-2    |    1e-10    |     -      |     512     |
-| ogbn-arxiv      | 1 |   1e-4   |   100   |   1e-4   |   1e-10   |     8192     |    1500    |
-| Reddit          | 10 |   1e-3   |   10   |   1e-2   | 1e-10 |     8192     |    1024    |
-| ogbn-products   | 10 |  1e-4  |  1  |  1e-5  | 1e-10 |     10240     |    512    |
-| ogbn-papers100M | 1 | 1e-4 | 1 | 1e-5 | 1e-10 |     10240     |    256    |
-
 
 
 ### Quick Start
