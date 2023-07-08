@@ -56,8 +56,6 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 | ogbn-papers100M | Attribute Graph | 111,059,956 | 1,615,685,872 |         128          |    172    |
 
 ### Requirements
-
-
 ```
 munkres==1.1.4
 networkx==3.1
@@ -71,7 +69,19 @@ tqdm==4.64.1
 
 
 
-### Configuration
+### Configurations
+
+```
+--device     |  running device
+--dataset    |  dataset name
+--hid_units  |  hidden units
+--activate   |  activation function
+--tradeoff   |  tradeoff parameter
+--lr         |  learning rate
+--epochs     |  training epochs
+--eval_inter |  evaluation interval
+--wandb      |  wandb logging
+```
 
 
 
@@ -84,19 +94,27 @@ git clone https://github.com/yueliu1999/Dink-Net.git
 cd ./Dink-Net
 ```
 
-run the codes with scripts
+run codes with scripts
 
 ```
+bash ./scripts/train_cora.sh
+
 bash ./scripts/train_citeseer.sh
+
+bash ./scripts/train_amazon_photo.sh
 ```
 
-or directly run the code with commands
+or directly run codes with commands
 
 ```
-python main.py --device cpu --dataset citeseer --hid_units 1536 --lr 5e-4 --epoch 200 --wandb True
+python main.py --device cpu --dataset cora --hid_units 512 --lr 1e-2 --epochs 200 --wandb
+
+python main.py --device cpu --dataset citeseer --hid_units 1536 --lr 5e-4 --epochs 200 --wandb
+
+python main.py --device cpu --dataset amazon_photo --hid_units 512 --lr 1e-2 --epochs 100 --wandb
 ```
 
-
+tips: remove "--wandb" to disable wandb logging. 
 
 
 
