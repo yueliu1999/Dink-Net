@@ -56,18 +56,24 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 | ogbn-papers100M | Attribute Graph | 111,059,956 | 1,615,685,872 |         128          |    172    |
 
 ### Requirements
+
+codes are tested on Python3.7
+
 ```
-dgl==1.1.1
+dgl==0.6.1
 munkres==1.1.4
-networkx==3.1
-numpy==1.23.5
-scikit_learn==1.2.1
-scipy==1.10.0
-torch==1.12.1
-tqdm==4.64.1
+networkx==2.8.3
+numpy==1.23.2
+scikit_learn==1.3.0
+scipy==1.6.0
+torch==2.0.1
+torch-scatter==2.0.9
+torch-sparse==0.6.12
+torch-spline-conv==1.2.1
+torch-geometric==2.1.0.post1
+tqdm==4.65.0
+wandb=0.15.4
 ```
-
-
 
 
 ### Configurations
@@ -83,8 +89,6 @@ tqdm==4.64.1
 --eval_inter |  evaluation interval
 --wandb      |  wandb logging
 ```
-
-
 
 ### Quick Start
 
@@ -114,14 +118,14 @@ bash ./scripts/train_amazon_photo.sh
 or directly run codes with commands
 
 ```
-python main.py --device cpu --dataset cora --hid_units 512 --lr 1e-2 --epochs 200 --wandb
+python main.py --device cuda:0 --dataset cora --hid_units 512 --lr 1e-2 --epochs 200 --wandb
 
-python main.py --device cpu --dataset citeseer --hid_units 1536 --lr 5e-4 --epochs 200 --wandb
+python main.py --device cuda:0 --dataset citeseer --hid_units 1536 --lr 5e-4 --epochs 200 --wandb
 
-python main.py --device cpu --dataset amazon_photo --hid_units 512 --lr 1e-2 --epochs 100 --wandb
+python main.py --device cuda:0 --dataset amazon_photo --hid_units 512 --lr 1e-2 --epochs 100 --wandb
 ```
 
-tips: remove "--wandb" to disable wandb logging. 
+tips: remove "--wandb" to disable wandb logging if logging error happened. 
 
 
 
