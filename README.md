@@ -95,6 +95,12 @@ git clone https://github.com/yueliu1999/Dink-Net.git
 cd ./Dink-Net
 ```
 
+unzip the datasets
+
+```
+unzip -d ./data/ ./data/datasets.zip
+```
+
 run codes with scripts
 
 ```
