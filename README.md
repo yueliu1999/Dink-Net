@@ -41,20 +41,32 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 </details>
 
 
-
 ## Usage
-### Requirements
+
 ### Datasets
 
 | Dataset         | Type            |   # Nodes   |    # Edges    | # Feature Dimensions | # Classes |
-| --------------- | --------------- | :---------: | :-----------: | :----------: | :-------: |
-| Cora            | Attribute Graph |    2,708    |     5,278     |    1,433     |     7     |
-| CiteSeer        | Attribute Graph |    3,327    |     4,614     |    3,703     |     6     |
-| Amazon-Photo    | Attribute Graph |    7,650    |    119,081    |     745      |     8     |
-| ogbn-arxiv      | Attribute Graph |   169,343   |   1,166,243   |     128      |    40     |
-| Reddit          | Attribute Graph |   232,965   |  23,213,838   |     602      |    41     |
-| ogbn-products   | Attribute Graph |  2,449,029  |  61,859,140   |     100      |    47     |
-| ogbn-papers100M | Attribute Graph | 111,059,956 | 1,615,685,872 |     128      |    172    |
+| --------------- | --------------- | :---------: | :-----------: | :------------------: | :-------: |
+| Cora            | Attribute Graph |    2,708    |     5,278     |        1,433         |     7     |
+| CiteSeer        | Attribute Graph |    3,327    |     4,614     |        3,703         |     6     |
+| Amazon-Photo    | Attribute Graph |    7,650    |    119,081    |         745          |     8     |
+| ogbn-arxiv      | Attribute Graph |   169,343   |   1,166,243   |         128          |    40     |
+| Reddit          | Attribute Graph |   232,965   |  23,213,838   |         602          |    41     |
+| ogbn-products   | Attribute Graph |  2,449,029  |  61,859,140   |         100          |    47     |
+| ogbn-papers100M | Attribute Graph | 111,059,956 | 1,615,685,872 |         128          |    172    |
+
+### Requirements
+
+
+```
+munkres==1.1.4
+networkx==3.1
+numpy==1.23.5
+scikit_learn==1.2.1
+scipy==1.10.0
+torch==1.12.1
+tqdm==4.64.1
+```
 
 
 
@@ -65,11 +77,26 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 
 ### Quick Start
 
-
-
-```
+clone this repository and change directory to Dink-Net
 
 ```
+git clone https://github.com/yueliu1999/Dink-Net.git
+cd ./Dink-Net
+```
+
+run the codes with scripts
+
+```
+bash ./scripts/train_citeseer.sh
+```
+
+or directly run the code with commands
+
+```
+python main.py --device cpu --dataset citeseer --hid_units 1536 --lr 5e-4 --epoch 200 --wandb True
+```
+
+
 
 
 
