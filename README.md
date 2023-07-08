@@ -57,6 +57,7 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 
 ### Requirements
 ```
+dgl==1.1.1
 munkres==1.1.4
 networkx==3.1
 numpy==1.23.5
