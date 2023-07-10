@@ -120,10 +120,10 @@ class GCN_dgl(nn.Module):
             self.layers.append(GraphConv(n_h, n_h, weight=weight, bias=bias, activation=activation))
 
     def forward(self, feat):
-        h = feat
-        h = h.squeeze(0)
+        h = feat.squeeze(0)
+        g = self.g.to(h.device)
         for i, layer in enumerate(self.layers):
-            h = layer(self.g, h)
+            h = layer(g, h)
         return h
 
 
