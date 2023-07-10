@@ -99,10 +99,11 @@ git clone https://github.com/yueliu1999/Dink-Net.git
 cd ./Dink-Net
 ```
 
-unzip the datasets
+unzip the datasets and model parameters
 
 ```
 unzip -d ./data/ ./data/datasets.zip
+unzip -d ./models/ ./models/models.zip
 ```
 
 run codes with scripts
