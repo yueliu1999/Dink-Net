@@ -55,6 +55,19 @@ class DinkNet(nn.Module):
         h = F.normalize(h, p=2, dim=-1)
         return h
 
+    @staticmethod
+    def dis_fun(x, c):
+        xx = (x * x).sum(-1).reshape(-1, 1).repeat(1, c.shape[0])
+        cc = (c * c).sum(-1).reshape(1, -1).repeat(x.shape[0], 1)
+        xx_cc = xx + cc
+        xc = x @ c.T
+        distance = xx_cc - 2 * xc
+        return distance
+
+    @staticmethod
+    def no_diag(x, n):
+        x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()
+
     def cal_loss(self, x, adj, disc_y):
         # augmentations
         x_aug = aug_feature_dropout(x)
@@ -66,10 +79,9 @@ class DinkNet(nn.Module):
 
         # clustering loss
         h = self.embed(x, adj, power=5, sparse=True)
-        sample_center_distance = (h.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
-        center_distance = (self.cluster_center.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
-        center_distance.flatten()[:-1].view(self.cluster_center.shape[0] - 1,
-                                            self.cluster_center.shape[0] + 1)[:, 1:].flatten()
+        sample_center_distance = self.dis_fun(h, self.cluster_center)
+        center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
+        self.no_diag(center_distance, self.cluster_center.shape[0])
         clustering_loss = sample_center_distance.mean() - center_distance.mean()
 
         # tradeoff
@@ -78,7 +90,7 @@ class DinkNet(nn.Module):
 
     def clustering(self, x, adj):
         h = self.embed(x, adj, sparse=True)
-        sample_center_distance = (h.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
+        sample_center_distance = self.dis_fun(h, self.cluster_center)
         cluster_results = torch.argmin(sample_center_distance, dim=-1)
         return cluster_results.cpu().detach().numpy()
 
@@ -171,6 +183,19 @@ class DinkNet_dgl(nn.Module):
 
         return h
 
+    @staticmethod
+    def dis_fun(x, c):
+        xx = (x * x).sum(-1).reshape(-1, 1).repeat(1, c.shape[0])
+        cc = (c * c).sum(-1).reshape(1, -1).repeat(x.shape[0], 1)
+        xx_cc = xx + cc
+        xc = x @ c.T
+        distance = xx_cc - 2 * xc
+        return distance
+
+    @staticmethod
+    def no_diag(x, n):
+        x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()
+
     def cal_loss(self, x, g, disc_y):
         # augmentations
         x_aug = aug_feature_dropout(x).squeeze(0)
@@ -181,10 +206,9 @@ class DinkNet_dgl(nn.Module):
 
         # clustering loss
         h = self.embed(x, g, power=10)
-        sample_center_distance = (h.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
-        center_distance = (self.cluster_center.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
-        center_distance.flatten()[:-1].view(self.cluster_center.shape[0] - 1,
-                                            self.cluster_center.shape[0] + 1)[:, 1:].flatten()
+        sample_center_distance = self.dis_fun(h, self.cluster_center)
+        center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
+        self.no_diag(center_distance, self.cluster_center.shape[0])
         clustering_loss = sample_center_distance.mean() - center_distance.mean()
 
         # tradeoff
@@ -194,6 +218,6 @@ class DinkNet_dgl(nn.Module):
 
     def clustering(self, x, adj):
         h = self.embed(x, adj, power=10)
-        sample_center_distance = (h.unsqueeze(1) - self.cluster_center.unsqueeze(0)).pow(2).sum(-1)
+        sample_center_distance = self.dis_fun(h, self.cluster_center)
         cluster_results = torch.argmin(sample_center_distance, dim=-1)
         return cluster_results.cpu().detach().numpy()
