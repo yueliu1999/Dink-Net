@@ -140,12 +140,12 @@ class GCN_dgl(nn.Module):
 
 
 class DinkNet_dgl(nn.Module):
-    def __init__(self, g, n_in, n_h, n_cluster, tradeoff, n_layers, activation, proj_layers=1, gnn_encoder='gcn', n_hop=10):
+    def __init__(self, g, n_in, n_h, n_cluster, tradeoff, encoder_layers, activation, projector_layers=1, gnn_encoder='gcn', n_hop=10):
         super(DinkNet_dgl, self).__init__()
         self.cluster_center = torch.nn.Parameter(torch.Tensor(n_cluster, n_h))
-        self.encoder = Encoder(g, n_in, n_h, n_layers, activation, gnn_encoder, n_hop)
+        self.encoder = Encoder(g, n_in, n_h, encoder_layers, activation, gnn_encoder, n_hop)
         self.mlp = torch.nn.ModuleList()
-        for i in range(proj_layers):
+        for i in range(projector_layers):
             self.mlp.append(nn.Linear(n_h, n_h))
         self.discrimination_loss = nn.BCEWithLogitsLoss()
         self.tradeoff = tradeoff

@@ -13,9 +13,11 @@ def train(args=None):
     
     # load graph data
     if args.dataset in ["cora", "citeseer"]:
-        x, adj, y, n, k, d = load_data(args.dataset)
+        x, adj, y, n, k, d = load_data(args)
     elif args.dataset in ["amazon_photo"]:
         x, adj, y, n, k, d = load_amazon_photo()
+    elif args.dataset in ["ogbn_arxiv"]:
+        x, adj, y, n, k, d = load_data_ogb(args)
 
     # label of discriminative task
     disc_y = torch.cat((torch.ones(n), torch.zeros(n)), 0)
@@ -23,9 +25,10 @@ def train(args=None):
     # model
     if args.dataset in ["cora", "citeseer"]:
         model = DinkNet(n_in=d, n_h=args.hid_units, n_cluster=k, tradeoff=args.tradeoff, activation=args.activate)
-    elif args.dataset in ["amazon_photo"]:
+    elif args.dataset in ["amazon_photo", "ogbn_arxiv"]:
         model = DinkNet_dgl(g=adj, n_in=d, n_h=args.hid_units, n_cluster=k,
-                            tradeoff=args.tradeoff, n_layers=1, activation=args.activate)
+                            tradeoff=args.tradeoff, encoder_layers=args.encoder_layer, 
+                            activation=args.activate, projector_layers=args.projector_layer)
 
     # to device
     x, adj, disc_y, model = map(lambda tmp: tmp.to(args.device), [x, adj, disc_y, model])
@@ -100,11 +103,14 @@ if __name__ == '__main__':
     parser.add_argument("--seed", type=int, default=2023, help="random seed")
     parser.add_argument("--device", type=str, default="cpu", help="training device")
     parser.add_argument("--dataset", type=str, default="citeseer", help="dataset name")
+    parser.add_argument("--dataset_dir", type=str, default="./data", help="dataset root path")
 
     # model
     parser.add_argument("--tradeoff", type=float, default=1e-10, help="tradeoff parameter")
     parser.add_argument("--activate", type=str, default="prelu", help="activation function")
     parser.add_argument("--hid_units", type=int, default=1536, help="number of hidden units")
+    parser.add_argument("--encoder_layer", type=int, default=1, help="number of encoder layers")
+    parser.add_argument("--projector_layer", type=int, default=1, help="number of projector layers")
 
     # training
     parser.add_argument("--lr", type=float, default=1e-2, help="learning rate")

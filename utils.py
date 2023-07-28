@@ -9,6 +9,7 @@ import networkx as nx
 import scipy.sparse as sp
 from munkres import Munkres
 from collections import Counter
+from ogb.nodeproppred import DglNodePropPredDataset
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.metrics import adjusted_rand_score as ari_score
 from sklearn.metrics.cluster import normalized_mutual_info_score as nmi_score
@@ -116,11 +117,11 @@ def aug_feature_shuffle(input_feat):
     return fake_input_feat
 
 
-def load_data(dataset_name):
+def load_data(args):
     """
     Load data for cora and citeseer datasets.
     args: 
-        dataset_name: dataset name
+        args: parameters
     returns:
         features: node attributes
         sp_adj: sparse normalized adjacency matrix
@@ -132,21 +133,21 @@ def load_data(dataset_name):
     names = ['x', 'y', 'tx', 'ty', 'allx', 'ally', 'graph']
     objects = []
     for i in range(len(names)):
-        with open("data/ind.{}.{}".format(dataset_name, names[i]), 'rb') as f:
+        with open("{}/ind.{}.{}".format(args.dataset_dir, args.dataset, names[i]), 'rb') as f:
             if sys.version_info > (3, 0):
                 objects.append(pkl.load(f, encoding='latin1'))
             else:
                 objects.append(pkl.load(f))
 
     x, y, tx, ty, allx, ally, graph = tuple(objects)
-    filename = "data/ind.{}.test.index".format(dataset_name)
+    filename = "{}/ind.{}.test.index".format(args.dataset_dir, args.dataset)
     test_idx_reorder = []
     for line in open(filename):
         test_idx_reorder.append(int(line.strip()))
 
     test_idx_range = np.sort(test_idx_reorder)
 
-    if dataset_name == 'citeseer':
+    if args.dataset == 'citeseer':
         test_idx_range_full = range(min(test_idx_reorder), max(test_idx_reorder)+1)
         tx_extended = sp.lil_matrix((len(test_idx_range_full), x.shape[1]))
         tx_extended[test_idx_range-min(test_idx_range), :] = tx
@@ -180,7 +181,7 @@ def load_data(dataset_name):
 
 def load_amazon_photo():
     """
-    Load data for cora and amazon photo dataset.
+    Load data for amazon photo dataset.
     args:
     returns:
         features: node attributes
@@ -207,8 +208,36 @@ def load_amazon_photo():
     d = features.shape[-1]
 
     labels = labels.argmax(1)
+    features = g.ndata['feat']
 
-    return g.ndata['feat'], g, labels, n, k, d
+    return features, g, labels, n, k, d
+
+
+def load_data_ogb(args):
+    """
+    Load data for ogbn-arxiv dataset.
+    args:
+        args: parameters
+    returns:
+        features: node attributes
+        g: dgl graph
+        labels: node labels
+        n: number of nodes
+        k: number of clusters
+        d: dimension number of node attributes
+    """
+
+    data = DglNodePropPredDataset(name=args.dataset.replace('_', '-'), root=args.dataset_dir)
+    g, labels = data[0]
+    g = dgl.add_self_loop(g)
+    features = g.ndata['feat']
+    labels = labels.reshape(-1, ).numpy()
+
+    n = features.shape[0]
+    k = labels.max() + 1
+    d = features.shape[-1]
+
+    return features, g, labels, n, k, d
 
 
 def sparse_to_tuple(sparse_mx, insert_batch=False):
