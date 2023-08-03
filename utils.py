@@ -225,11 +225,19 @@ def load_data_ogb(args):
         n: number of nodes
         k: number of clusters
         d: dimension number of node attributes
+        train_loader: dataloader of the graph
     """
 
     data = DglNodePropPredDataset(name=args.dataset.replace('_', '-'), root=args.dataset_dir)
     g, labels = data[0]
-    g = dgl.add_self_loop(g)
+
+    feat = g.ndata["feat"]
+    g = dgl.to_bidirected(g)
+    g.ndata["feat"] = feat
+
+    g = g.remove_self_loop().add_self_loop()
+    g.create_formats_()
+
     features = g.ndata['feat']
     labels = labels.reshape(-1, ).numpy()
 
@@ -237,7 +245,17 @@ def load_data_ogb(args):
     k = labels.max() + 1
     d = features.shape[-1]
 
-    return features, g, labels, n, k, d
+    sampler = dgl.dataloading.MultiLayerFullNeighborSampler(args.encoder_layer)
+
+    train_loader = dgl.dataloading.DataLoader(
+        g, torch.tensor(range(n)), sampler,
+        batch_size=args.batch_size, shuffle=True, drop_last=False, num_workers=0)
+
+    test_loader = dgl.dataloading.DataLoader(
+        g, torch.tensor(range(n)), sampler,
+        batch_size=args.batch_size, shuffle=False, drop_last=False, num_workers=0)
+
+    return features, g, labels, n, k, d, train_loader, test_loader
 
 
 def sparse_to_tuple(sparse_mx, insert_batch=False):
