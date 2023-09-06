@@ -2,6 +2,7 @@ from utils import *
 import torch.nn as nn
 import dgl.function as fn
 import torch.nn.functional as F
+from sklearn.cluster import KMeans
 from dgl.nn.pytorch import GraphConv
 
 # ------------------------from scratch------------------------
@@ -29,6 +30,7 @@ class GCN(nn.Module):
 class DinkNet(nn.Module):
     def __init__(self, n_in, n_h, n_cluster, tradeoff=1e-10, activation="prelu"):
         super(DinkNet, self).__init__()
+        self.n_cluster = n_cluster
         self.cluster_center = torch.nn.Parameter(torch.Tensor(n_cluster, n_h))
         self.gcn = GCN(n_in, n_h, activation)
         self.lin = nn.Linear(n_h, n_h)
@@ -68,7 +70,7 @@ class DinkNet(nn.Module):
     def no_diag(x, n):
         x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()
 
-    def cal_loss(self, x, adj):
+    def cal_loss(self, x, adj, finetune=True):
         # augmentations
         x_aug = aug_feature_dropout(x)
         x_shuffle = aug_feature_shuffle(x_aug)
@@ -79,22 +81,32 @@ class DinkNet(nn.Module):
         disc_y = torch.cat((torch.ones(n), torch.zeros(n)), 0).to(logit.device)
         loss_disc = self.discrimination_loss(logit, disc_y)
 
-        # clustering loss
-        h = self.embed(x, adj, power=5, sparse=True)
-        sample_center_distance = self.dis_fun(h, self.cluster_center)
-        center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
-        self.no_diag(center_distance, self.cluster_center.shape[0])
-        clustering_loss = sample_center_distance.mean() - center_distance.mean()
+        if finetune:
+            # clustering loss
+            h = self.embed(x, adj, power=5, sparse=True)
+            sample_center_distance = self.dis_fun(h, self.cluster_center)
+            center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
+            self.no_diag(center_distance, self.cluster_center.shape[0])
+            clustering_loss = sample_center_distance.mean() - center_distance.mean()
 
-        # tradeoff
-        loss = clustering_loss + self.tradeoff * loss_disc
+            # tradeoff
+            loss = clustering_loss + self.tradeoff * loss_disc
+
+        else:
+            loss = loss_disc
+            sample_center_distance = None
+
         return loss, sample_center_distance
 
-    def clustering(self, x, adj):
+    def clustering(self, x, adj, finetune=True):
         h = self.embed(x, adj, sparse=True)
-        sample_center_distance = self.dis_fun(h, self.cluster_center)
-        cluster_results = torch.argmin(sample_center_distance, dim=-1)
-        return cluster_results.cpu().detach().numpy()
+        if finetune:
+            sample_center_distance = self.dis_fun(h, self.cluster_center)
+            cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
+        else:
+            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
+            cluster_results = km.labels_
+        return cluster_results
 
 
 # ------------------------from dgl------------------------
@@ -146,6 +158,7 @@ class DinkNet_dgl(nn.Module):
     def __init__(self, g_global, n_in, n_h, n_cluster, tradeoff, encoder_layers, activation, projector_layers=1, dropout_rate=0.2, gnn_encoder='gcn', n_hop=10):
         super(DinkNet_dgl, self).__init__()
         self.g_global = g_global
+        self.n_cluster = n_cluster
         self.cluster_center = torch.nn.Parameter(torch.Tensor(n_cluster, n_h))
         self.encoder = Encoder(n_in, n_h, encoder_layers, activation, gnn_encoder, n_hop)
         self.mlp = torch.nn.ModuleList()
@@ -204,7 +217,7 @@ class DinkNet_dgl(nn.Module):
     def no_diag(x, n):
         x.flatten()[:-1].view(n - 1, n + 1)[:, 1:].flatten()
 
-    def cal_loss(self, x, g, batch_train=False):
+    def cal_loss(self, x, g, batch_train=False, finetune=True):
         # augmentations
         x_aug = aug_feature_dropout(x, drop_rate=self.dropout_rate).squeeze(0)
 
@@ -217,20 +230,29 @@ class DinkNet_dgl(nn.Module):
         # discrimination loss
         loss_disc = self.discrimination_loss(logit, disc_y)
 
-        # clustering loss
-        h = self.embed(x, g, power=10, batch_train=batch_train)
-        sample_center_distance = self.dis_fun(h, self.cluster_center)
-        center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
-        self.no_diag(center_distance, self.cluster_center.shape[0])
-        clustering_loss = sample_center_distance.mean() - center_distance.mean()
+        if finetune:
+            # clustering loss
+            h = self.embed(x, g, power=10, batch_train=batch_train)
+            sample_center_distance = self.dis_fun(h, self.cluster_center)
+            center_distance = self.dis_fun(self.cluster_center, self.cluster_center)
+            self.no_diag(center_distance, self.cluster_center.shape[0])
+            clustering_loss = sample_center_distance.mean() - center_distance.mean()
 
-        # tradeoff
-        loss = clustering_loss + self.tradeoff * loss_disc
+            # tradeoff
+            loss = clustering_loss + self.tradeoff * loss_disc
+
+        else:
+            loss = loss_disc
+            sample_center_distance = None
 
         return loss, sample_center_distance
 
-    def clustering(self, x, adj, batch_train=False):
+    def clustering(self, x, adj, batch_train=False, finetune=True):
         h = self.embed(x, adj, power=10, batch_train=batch_train)
-        sample_center_distance = self.dis_fun(h, self.cluster_center)
-        cluster_results = torch.argmin(sample_center_distance, dim=-1)
-        return cluster_results.cpu().detach().numpy()
+        if finetune:
+            sample_center_distance = self.dis_fun(h, self.cluster_center)
+            cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
+        else:
+            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
+            cluster_results = km.labels_
+        return cluster_results
