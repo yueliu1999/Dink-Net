@@ -61,7 +61,7 @@ Deep graph clustering, which aims to group the nodes of a graph into disjoint cl
 codes are tested on Python3.7
 
 ```
-dgl==0.6.1
+dgl-cu113==0.9.1.post1
 munkres==1.1.4
 networkx==2.8.3
 numpy==1.23.2
@@ -74,6 +74,7 @@ torch-spline-conv==1.2.1
 torch-geometric==2.1.0.post1
 tqdm==4.65.0
 wandb=0.15.4
+ogb==1.3.6
 ```
 
 
