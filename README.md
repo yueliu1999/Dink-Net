@@ -74,6 +74,7 @@ torch-spline-conv==1.2.1
 torch-geometric==2.1.0.post1
 tqdm==4.65.0
 wandb=0.15.4
+ogb==1.3.6
 ```
 
 
