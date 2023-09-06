@@ -37,7 +37,6 @@ def train(args=None):
 
     # testing
     y_hat = model.clustering(x, adj, finetune=False)
-
     acc, nmi, ari, f1 = evaluation(y, y_hat)
 
     # logging
@@ -45,6 +44,10 @@ def train(args=None):
 
     # optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
+
+    # model dir
+    if not os.path.exists("./models"):
+        os.makedirs("./models")
 
     best_acc = 0
 
