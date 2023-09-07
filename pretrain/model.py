@@ -104,7 +104,7 @@ class DinkNet(nn.Module):
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
         else:
-            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
+            km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
             cluster_results = km.labels_
             self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
         return cluster_results
@@ -254,7 +254,7 @@ class DinkNet_dgl(nn.Module):
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
         else:
-            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
+            km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
             cluster_results = km.labels_
             self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
         return cluster_results
