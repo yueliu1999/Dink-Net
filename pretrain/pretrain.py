@@ -35,13 +35,6 @@ def train(args=None):
     else:
         x, adj, model = map(lambda tmp: tmp.to(args.device), [x, adj, model])
 
-    # testing
-    y_hat = model.clustering(x, adj, finetune=False)
-    acc, nmi, ari, f1 = evaluation(y, y_hat)
-
-    # logging
-    tqdm.write("test      ｜ acc:{:.2f} ｜ nmi:{:.2f} ｜ ari:{:.2f} ｜ f1:{:.2f}".format(acc, nmi, ari, f1))
-
     # optimizer
     optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
 
@@ -93,10 +86,9 @@ def train(args=None):
         if (epoch + 1) % args.eval_inter == 0:
             model.eval()
 
-            y_hat = model.clustering(x, adj, finetune=False)
+            y_hat = model.clustering(x, adj, finetune=False, cuda=args.km_cuda)
 
             acc, nmi, ari, f1 = evaluation(y, y_hat)
-            print(acc, nmi, ari, f1)
             if best_acc < acc:
                 best_acc = acc
                 torch.save(model.state_dict(), "./models/DinkNet_" + args.dataset + ".pt")
@@ -120,6 +112,7 @@ def train(args=None):
     acc, nmi, ari, f1 = evaluation(y, y_hat)
 
     # logging
+    print(args.seed)
     tqdm.write("test      ｜ acc:{:.2f} ｜ nmi:{:.2f} ｜ ari:{:.2f} ｜ f1:{:.2f}".format(acc, nmi, ari, f1))
 
     if args.wandb:
@@ -150,10 +143,10 @@ if __name__ == '__main__':
     parser.add_argument("--epochs", type=int, default=200, help="number of epochs")
     parser.add_argument("--batch_train", action='store_true', default=False, help="batch train")
     parser.add_argument("--batch_test", action='store_true', default=False, help="batch test")
+    parser.add_argument("--km_cuda", action='store_true', default=False, help="clustering on cuda")
     parser.add_argument("--batch_size", type=int, default=-1, help="batch size")
     parser.add_argument("--dropout_rate", type=float, default=0.2, help="dropout rate")
-    parser.add_argument("--eval_inter", type=int, default=10, help="interval of evaluation")
+    parser.add_argument("--eval_inter", type=int, default=1, help="interval of evaluation")
 
     args = parser.parse_args()
-
     train(args=args)

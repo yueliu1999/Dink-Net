@@ -2,6 +2,7 @@ from utils import *
 import torch.nn as nn
 import dgl.function as fn
 import torch.nn.functional as F
+from libKMCUDA import kmeans_cuda
 from sklearn.cluster import KMeans
 from dgl.nn.pytorch import GraphConv
 
@@ -98,15 +99,20 @@ class DinkNet(nn.Module):
 
         return loss, sample_center_distance
 
-    def clustering(self, x, adj, finetune=True):
+    def clustering(self, x, adj, finetune=True, cuda=True):
         h = self.embed(x, adj, sparse=True)
         if finetune:
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
         else:
-            km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
-            cluster_results = km.labels_
-            self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
+            if cuda:
+                center, cluster_results = kmeans_cuda(h.cpu().detach().numpy(), self.n_cluster, verbosity=0, seed=3, device=h.get_device())
+                self.cluster_center.data = torch.tensor(center).to(h.device)
+            else:
+                km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
+                cluster_results = km.labels_
+                self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
+
         return cluster_results
 
 
@@ -248,13 +254,17 @@ class DinkNet_dgl(nn.Module):
 
         return loss, sample_center_distance
 
-    def clustering(self, x, adj, batch_train=False, finetune=True):
+    def clustering(self, x, adj, batch_train=False, finetune=True, cuda=True):
         h = self.embed(x, adj, power=10, batch_train=batch_train)
         if finetune:
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
         else:
-            km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
-            cluster_results = km.labels_
-            self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
+            if cuda:
+                center, cluster_results = kmeans_cuda(h.cpu().detach().numpy(), self.n_cluster, verbosity=0, seed=3, device=h.get_device())
+                self.cluster_center.data = torch.tensor(center).to(h.device)
+            else:
+                km = KMeans(n_clusters=self.n_cluster, n_init=20).fit(h.cpu().detach().numpy())
+                cluster_results = km.labels_
+                self.cluster_center.data = torch.tensor(km.cluster_centers_).to(h.device)
         return cluster_results
