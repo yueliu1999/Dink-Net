@@ -161,6 +161,8 @@ Our code are partly based on the following GitHub repository. Thanks for their a
 - [HSAN](https://github.com/yueliu1999/HSAN): the official implement of Hard Sample Aware Network (HSAN) model.
 - [DCRN](https://github.com/yueliu1999/DCRN): the official implement of Dual Correlation Reduction Network (DCRN) model.
 
+## Pretraining
+pretrain Dink-Net on your own dataset. Refer to [here](./pretrain/README.md).
 
 
 
