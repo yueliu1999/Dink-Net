@@ -57,7 +57,6 @@ def train(args=None):
                    reinit=True)
 
     for epoch in tqdm(range(args.epochs)):
-
         model.train()
         # batch graph training
         if args.batch_train:
@@ -112,7 +111,6 @@ def train(args=None):
     acc, nmi, ari, f1 = evaluation(y, y_hat)
 
     # logging
-    print(args.seed)
     tqdm.write("test      ｜ acc:{:.2f} ｜ nmi:{:.2f} ｜ ari:{:.2f} ｜ f1:{:.2f}".format(acc, nmi, ari, f1))
 
     if args.wandb:
