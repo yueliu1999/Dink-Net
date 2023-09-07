@@ -2,7 +2,6 @@ from utils import *
 import torch.nn as nn
 import dgl.function as fn
 import torch.nn.functional as F
-from sklearn.cluster import KMeans
 from dgl.nn.pytorch import GraphConv
 
 # ------------------------from scratch------------------------
@@ -103,9 +102,6 @@ class DinkNet(nn.Module):
         if finetune:
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
-        else:
-            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
-            cluster_results = km.labels_
         return cluster_results
 
 
@@ -252,7 +248,4 @@ class DinkNet_dgl(nn.Module):
         if finetune:
             sample_center_distance = self.dis_fun(h, self.cluster_center)
             cluster_results = torch.argmin(sample_center_distance, dim=-1).cpu().detach().numpy()
-        else:
-            km = KMeans(n_clusters=self.n_cluster).fit(h.cpu().detach().numpy())
-            cluster_results = km.labels_
         return cluster_results
