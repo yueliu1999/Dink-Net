@@ -129,7 +129,7 @@ python main.py --device cuda:0 --dataset citeseer --hid_units 1536 --lr 5e-4 --e
 
 python main.py --device cuda:0 --dataset amazon_photo --hid_units 512 --lr 1e-2 --epochs 100 --wandb
 
-python main.py --device cuda:0 --dataset ogbn_arxiv --hid_units 1500 --encoder_layer 3 --lr 1e-4 --epochs 30 --batch_size 8192 --batch_train --wandb
+python main.py --device cuda:0 --dataset ogbn_arxiv --hid_units 1500 --encoder_layer 3 --lr 1e-4 --epochs 30 --batch_size 8192 --batch_train --eval_inter 1 --wandb
 ```
 
 tips: remove "--wandb" to disable wandb logging if logging error happened. 
