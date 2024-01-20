@@ -159,6 +159,7 @@ Our code are partly based on the following GitHub repository. Thanks for their a
 - [Graph-Group-Discrimination](https://github.com/zyzisastudyreallyhardguy/Graph-Group-Discrimination): the official implement of Graph Group Discrimination (GGD) model.
 - [S3GC](https://github.com/devvrit/S3GC): the official implement of Scalable Self-Supervised Graph Clustering (S3GC) model. 
 - [HSAN](https://github.com/yueliu1999/HSAN): the official implement of Hard Sample Aware Network (HSAN) model.
+- [HSAN](https://github.com/yueliu1999/SCGC): the official implement of Simple Contrastive Graph Clustering (SCGC) model.
 - [DCRN](https://github.com/yueliu1999/DCRN): the official implement of Dual Correlation Reduction Network (DCRN) model.
 
 ## Pretraining
